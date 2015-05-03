@@ -9,10 +9,10 @@ targetCompatibility = 1.8
 [compileJava, compileTestJava]*.options*.encoding = "UTF-8"
 
 //Consolidate Java logging on Log4j 2
-apply from: "${rootProject.projectDir}/../gradle-common/log4j2.gradle"
+apply from: "${rootProject.projectDir}/../gradle-base/log4j2.gradle"
 
 //Use Spock for unit tests
-apply from: "${rootProject.projectDir}/../gradle-common/spock.gradle"
+apply from: "${rootProject.projectDir}/../gradle-base/spock.gradle"
 	
 configurations.all
 {
@@ -43,4 +43,4 @@ publishing
 //	    publications ('mavenJava')
 //	}
 
-//apply from: "${rootProject.projectDir}/../gradle-common/sonar.gradle"
+//apply from: "${rootProject.projectDir}/../gradle-base/sonar.gradle"

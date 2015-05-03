@@ -1,4 +1,4 @@
-apply from: "${rootProject.projectDir}/../gradle-common/lib-versions.gradle"
+apply from: "${rootProject.projectDir}/../gradle-base/lib-versions.gradle"
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
@@ -11,8 +11,8 @@ allprojects
 
 	group = "de.daniel-barth"
 	
-	apply from: "${rootProject.projectDir}/../gradle-common/repositories.gradle"
-	apply from: "${rootProject.projectDir}/../gradle-common/artifactory.gradle"
+	apply from: "${rootProject.projectDir}/../gradle-base/repositories.gradle"
+	apply from: "${rootProject.projectDir}/../gradle-base/artifactory.gradle"
 }
 
 /* Specific project types - define in custom build.gradle
@@ -27,7 +27,7 @@ if(project.hasProperty("javaProjects"))
 {
 	configure(javaProjects)
 	{
-		apply from: "${rootProject.projectDir}/../gradle-common/java.gradle"
+		apply from: "${rootProject.projectDir}/../gradle-base/java.gradle"
 	}
 }
 
@@ -35,7 +35,7 @@ if(project.hasProperty("webProjects"))
 {
 	configure(webProjects)
 	{
-		apply from: "${rootProject.projectDir}/../gradle-common/web.gradle"
+		apply from: "${rootProject.projectDir}/../gradle-base/web.gradle"
 	}
 }
 
@@ -43,6 +43,6 @@ if(project.hasProperty("jpaProjects"))
 {
 	configure(jpaProjects) 
 	{
-		apply from: "${rootProject.projectDir}/../gradle-common/querydsl.gradle"
+		apply from: "${rootProject.projectDir}/../gradle-base/querydsl.gradle"
 	}
 }
