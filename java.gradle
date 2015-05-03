@@ -1,0 +1,46 @@
+apply plugin: "java"
+//For pom generation
+apply plugin: "maven"
+
+//Default to Java 8
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+[compileJava, compileTestJava]*.options*.encoding = "UTF-8"
+
+//Consolidate Java logging on Log4j 2
+apply from: "${rootProject.projectDir}/../gradle-common/log4j2.gradle"
+
+//Use Spock for unit tests
+apply from: "${rootProject.projectDir}/../gradle-common/spock.gradle"
+	
+configurations.all
+{
+	// check for updates every build
+	resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+//Create sources jar...
+task sourcesJar(type: Jar, dependsOn: classes) {//Has to be on this line!
+	classifier 'sources'
+	from sourceSets.main.allSource
+}
+
+//...and add it together with jar to (published) artifacts		
+publishing
+{
+    publications
+    {
+    	mavenJava(MavenPublication)
+        {
+    		from components.java
+    		artifact(sourcesJar)
+        }
+    }
+}
+	
+//	artifactoryPublish {
+//	    publications ('mavenJava')
+//	}
+
+//apply from: "${rootProject.projectDir}/../gradle-common/sonar.gradle"

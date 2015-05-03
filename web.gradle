@@ -1,0 +1,22 @@
+apply plugin: 'war'
+	
+dependencies
+{
+	runtime libs["log4j-web"]
+}
+	
+publishing
+{
+    publications
+    {
+    	mavenWeb(MavenPublication)
+    	{
+    		artifactId project.war.baseName
+    		from components.web
+    	}
+    }
+}
+
+//artifactoryPublish {
+//    publications ('mavenWeb')
+//}

@@ -1,0 +1,48 @@
+apply from: "${rootProject.projectDir}/../gradle-common/lib-versions.gradle"
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.3'
+}
+
+allprojects
+{
+	apply plugin: "eclipse"
+	apply plugin: "idea"
+
+	group = "de.daniel-barth"
+	
+	apply from: "${rootProject.projectDir}/../gradle-common/repositories.gradle"
+	apply from: "${rootProject.projectDir}/../gradle-common/artifactory.gradle"
+}
+
+/* Specific project types - define in custom build.gradle
+ * example:
+ * 	
+ * 	ext.javaProjects = [	
+ *		project(':project1')
+ *		,project(':project2')
+ *	] 
+ */
+if(project.hasProperty("javaProjects"))
+{
+	configure(javaProjects)
+	{
+		apply from: "${rootProject.projectDir}/../gradle-common/java.gradle"
+	}
+}
+
+if(project.hasProperty("webProjects"))
+{
+	configure(webProjects)
+	{
+		apply from: "${rootProject.projectDir}/../gradle-common/web.gradle"
+	}
+}
+
+if(project.hasProperty("jpaProjects"))
+{
+	configure(jpaProjects) 
+	{
+		apply from: "${rootProject.projectDir}/../gradle-common/querydsl.gradle"
+	}
+}

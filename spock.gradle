@@ -1,0 +1,33 @@
+apply plugin: "groovy"
+
+dependencies
+{	
+	//Test
+	testCompile(libs["spock-core"])
+	testCompile(libs["spock-spring"])
+	testCompile(libs["junit"])		
+}
+
+test
+{
+	ignoreFailures = true
+}
+
+task jenkinsTest{
+	
+	inputs.files test.outputs.files
+	
+	doLast{
+		
+		if(test.getReports().getJunitXml().getDestination().exists())
+		{
+			def timestamp = System.currentTimeMillis()
+			
+			println("Touching test reports - workaround for Jenkins build.")
+		
+			test.getReports().getJunitXml().getDestination().eachFile { it.lastModified = timestamp }
+		}
+	}
+}
+ 
+build.dependsOn(jenkinsTest)

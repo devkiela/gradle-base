@@ -1,0 +1,45 @@
+apply plugin: 'sonar-runner'
+
+configure(javaProjects){
+
+	configurations
+	{
+		jacoco //Configuration Group used by Sonar to provide Code Coverage using JaCoCo
+	}
+	
+	dependencies{
+	
+		jacoco(libs["org.jacoco.agent"])
+	}
+	
+	test
+	{
+		//jvmArgs = ["-javaagent:${configurations.jacoco.asPath}=destfile=${buildDir}/reports/codecoverage/jacoco.exec,includes=de.daniel-barth.*", "-Djava.library.path=$nativeLibDir/x86;$nativeLibDir/x64", "-XX:MaxPermSize=1024m", "-Xmx1024m"]
+		jvmArgs = ["-javaagent:${configurations.jacoco.asPath}=destfile=${buildDir}/reports/codecoverage/jacoco.exec,includes=de.daniel-barth.*", "-XX:MaxPermSize=1024m", "-Xmx1024m"]
+		
+	}
+
+	sonarRunner
+	{
+		sonarProperties
+		{
+			property "sonar.jacoco.reportPath", "${buildDir}/reports/codecoverage/jacoco.exec"
+		}
+	}
+	
+	sonarRunner
+	{
+		sonarProperties
+		{
+			property "sonar.host.url", System.getenv()['SONAR_URL'] == null ? "sonar_url" : System.getenv()['SONAR_URL']
+			property "sonar.jdbc.url", System.getenv()['SONAR_JDBC_URL'] 	== null ? 	"sonar_jdbc_url" 	: 	System.getenv()['SONAR_JDBC_URL']
+			property "sonar.jdbc.driverClassName", System.getenv()['SONAR_JDBC_DRIVER'] 	== null ? 	"sonar_jdbc_driver" : 	System.getenv()['SONAR_JDBC_DRIVER']
+			property "sonar.username", System.getenv()['SONAR_JDBC_USER'] 	== null ? 	"sonar_jdbc_user" 	:	System.getenv()['SONAR_JDBC_USER']
+			property "sonar.password", System.getenv()['SONAR_JDBC_PASS'] 	== null ? 	"sonar_jdbc_pass" 	: 	System.getenv()['SONAR_JDBC_PASS']
+			//property "sonar.projectKey", "de.daniel-barth"
+			//property "sonar.projectName", "de.daniel-barth"
+			property "sonar.dynamicAnalysis", "reuseReports"
+			property "sonar.core.codeCoveragePlugin", "jacoco"
+		}
+	}
+}

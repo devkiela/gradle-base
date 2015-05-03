@@ -1,0 +1,29 @@
+dependencies
+{
+	compile libs["log4j-api"]
+	compile libs["log4j-core"]
+	compile libs["log4j-1.2-api"]
+	compile libs["log4j-jcl"]
+	compile libs["log4j-jul"]
+}
+
+configurations.all {
+	
+	//Unify logging with log4j 2
+	exclude group: "log4j", module: "log4j"
+	exclude group: "org.slf4j", module: "slf4j-log4j12"
+	exclude group: "org.slf4j", module: "log4j-over-slf4j"
+	exclude group: "org.slf4j", module: "jcl-over-slf4j"
+	exclude group: "org.slf4j", module: "jul-to-slf4j"
+	exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+	exclude group: "ch.qos.logback", module: "logback-classic"
+		
+	resolutionStrategy {  
+		eachDependency { DependencyResolveDetails details ->
+			//forcing jboss-logging >= 3.2.0 for log4j2 fix
+			if (details.requested.name == 'jboss-logging') {
+				details.useVersion "3.2.1.Final"
+			}
+		}
+	}
+}

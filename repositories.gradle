@@ -1,0 +1,9 @@
+//Dependency resolution
+repositories
+{	
+	mavenLocal()
+	
+	mavenCentral()
+	
+	//maven{ url "" }
+}

@@ -1,0 +1,102 @@
+// read environment variables, including variables passed by jenkins continuous integration server
+def env = System.getenv()
+
+def repoUrl
+def repoUser
+def repoPassword
+
+repoUrl = "http://localhost:8080/artifactory"
+
+//Looking for repository credentials...
+if(!hasProperty('mavenUser'))
+{
+	if (null != System.properties['mavenUser'])
+	{
+		repoUser = System.properties['mavenUser']
+	}
+	else if(null != env.MAVENUSER)
+	{
+		repoUser = env.MAVENUSER
+	}
+}
+else
+{
+	repoUser = mavenUser
+}
+
+if(!hasProperty('mavenPassword'))
+{
+	if (null != System.properties['mavenPassword']) 
+	{
+		repoPassword = System.properties['mavenPassword']
+	}
+	else if(null != env.MAVENPASSWORD)
+	{
+		repoPassword = env.MAVENPASSWORD
+	}
+}
+else
+{
+	repoPassword = mavenPassword
+}
+
+//Artifact(ory) upload
+apply plugin: 'maven-publish'
+	
+String publishRepo = version.endsWith('SNAPSHOT') ? 'libs-snapshot-local' : 'libs-release-local'
+	
+publishing
+{
+	repositories
+	{
+		maven
+		{
+            url "${repoUrl}/${publishRepo}"
+            
+            credentials
+    		{
+    			username repoUser
+    			password repoPassword
+    		}
+        }
+    }
+}
+
+//apply plugin: "com.jfrog.artifactory"
+//  
+//artifactory {
+//	
+//	contextUrl = repoUrl
+//	  
+//	publish {
+//	
+//		contextUrl = repoUrl
+//		
+//		repository {
+//			
+//		  String publishRepo = version.endsWith('SNAPSHOT') ? 'libs-snapshot-local' : 'libs-release-local'
+//			
+//		  repoKey = publishRepo
+//		  username = mavenUser
+//		  password = mavenPassword
+//		  
+//		}
+//		
+////		defaults
+////		{
+////		   publications ('mavenJava', 'mavenWeb')
+////		}
+//	}
+//	  
+//	resolve {
+//	
+//		contextUrl = repoUrl
+//		
+//		repository {
+//			
+//			repoKey = 'repo'
+//			username = mavenUser
+//			password = mavenPassword
+//		}
+//	}
+//}
